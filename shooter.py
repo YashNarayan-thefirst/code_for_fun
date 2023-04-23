@@ -8,7 +8,6 @@ pygame.init()
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Shooting Game")
 
 # set up the clock
 clock = pygame.time.Clock()
@@ -70,12 +69,19 @@ while not game_over:
                 laser_cooldown_counter = laser_cooldown
 
     # handle input
-    keys = pygame.key.get_pressed()
+        keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and player.left > 0:
         player.left -= player_speed
+        for bullet in bullet_list:
+            bullet.left -= player_speed
+        if laser_rect.top != 0:
+            laser_rect.left -= player_speed
     elif keys[pygame.K_RIGHT] and player.right < screen_width:
         player.right += player_speed
-
+        for bullet in bullet_list:
+            bullet.left += player_speed
+        if laser_rect.top != 0:
+            laser_rect.left += player_speed
     # move bullets
     for bullet in bullet_list:
         bullet.top -= bullet_speed
