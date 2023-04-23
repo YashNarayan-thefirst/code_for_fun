@@ -42,6 +42,15 @@ enemy_list = []
 score = 0
 font = pygame.font.SysFont(None, 30)
 
+# set up the laser
+laser_width = 150
+laser_height = screen_height
+laser_speed = 20
+laser_color = (255, 0, 0)
+laser_cooldown = 5 * 60  # 5 seconds in frames
+laser_cooldown_counter = 0
+laser_rect = pygame.Rect(screen_width // 2 - laser_width // 2, 0, laser_width, laser_height)
+
 # game loop
 game_over = False
 while not game_over:
@@ -55,6 +64,10 @@ while not game_over:
                 bullet_x = player_x + player_width // 2 - bullet_width // 2
                 bullet_y = player_y - bullet_height
                 bullet_list.append(pygame.Rect(bullet_x, bullet_y, bullet_width, bullet_height))
+            elif event.key == pygame.K_LSHIFT and laser_cooldown_counter == 0:
+                # activate the laser
+                laser_rect.top = 0
+                laser_cooldown_counter = laser_cooldown
 
     # handle input
     keys = pygame.key.get_pressed()
@@ -67,6 +80,10 @@ while not game_over:
     for bullet in bullet_list:
         bullet.top -= bullet_speed
 
+    # move laser
+    if laser_rect.top < screen_height:
+        laser_rect.top += laser_speed
+
     # move enemies and check for collision
     for enemy in enemy_list:
         enemy.top += enemy_speed
@@ -77,6 +94,9 @@ while not game_over:
                 bullet_list.remove(bullet)
                 enemy_list.remove(enemy)
                 score += 1
+        if laser_rect.colliderect(enemy):
+            enemy_list.remove(enemy)
+            score += 1
 
     # spawn enemies
     if len(enemy_list) < 10 and random.randint(1, 50) == 1:
