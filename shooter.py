@@ -79,10 +79,12 @@ while not game_over:
                 score += 1
 
     # spawn enemies
-    if random.randint(1, 50) == 1:
-        enemy_x = random.randint(0, screen_width - enemy_width)
-        enemy_y = -enemy_height
-        enemy_list.append(pygame.Rect(enemy_x, enemy_y, enemy_width, enemy_height))
+    if len(enemy_list) < 10 and random.randint(1, 50) == 1:
+        enemy_count = random.randint(1, 5)
+        for i in range(enemy_count):
+            enemy_x = random.randint(0, screen_width - enemy_width)
+            enemy_y = -enemy_height
+            enemy_list.append(pygame.Rect(enemy_x, enemy_y, enemy_width, enemy_height))
 
     # draw screen
     screen.fill(white)
